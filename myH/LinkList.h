@@ -1,12 +1,11 @@
-#ifndef _LINKTABLE_H                
-#define _LINKTABLE_H
+#ifndef _LINKLink_H                
+#define _LINKLink_H
 
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdbool.h>
 
 typedef long long int ElemType;
-static int LinkLength;
 
 typedef struct  LNode
 {
@@ -86,9 +85,8 @@ LinkList InitList(LinkList SL, ElemType* arr, int length)
 
     head = SL;
     end = head;
-    LinkLength = length;
 
-    for(int i = 0; i < LinkLength; i++)
+    for(int i = 0; i < length; i++)
     {
         node = (LNode*)malloc(sizeof(LNode));
         node->data = arr[i];
@@ -116,10 +114,9 @@ void DestroyList(LinkList SL)
     }
 
     free(SL);
-    LinkLength = 0;
 }
 
-// 顺序表判空
+// 链表判空
 bool ListEmpty(LinkList SL)
 {
     if(SL == NULL)
@@ -147,10 +144,17 @@ void PrintList(LinkList SL)
     }
 }
 
-// 求顺序表的长度
+// 求链表的长度
 int ListLength(LinkList SL)
 {
-    return LinkLength;
+    LNode* node = SL->next;
+    int length = 0;
+    while(node != NULL)
+    { 
+        node = node->next;
+        length++;
+    }
+    return length;
 }
 
 // 求数据元素前驱
@@ -212,7 +216,7 @@ ElemType NextElem(LinkList SL, ElemType cur_e, ElemType* next_e)
 // 求链表中的第i个数据元素
 ElemType GetElem(LinkList SL, int i, ElemType* e)
 {
-    if(i < 1 || i > LinkLength)
+    if(i < 1 || i > ListLength(SL))
     {
         printf("查找超出范围！\n");
         return NULL;
@@ -230,7 +234,7 @@ ElemType GetElem(LinkList SL, int i, ElemType* e)
     return *e;
 }
 
-// 定位函数(可能有问题？)
+// 定位函数
 int LocateElem(LinkList SL, ElemType e, bool (*compare)(ElemType, ElemType))
 {
     LNode* node = SL->next;
@@ -244,7 +248,8 @@ int LocateElem(LinkList SL, ElemType e, bool (*compare)(ElemType, ElemType))
         node = node->next;
         i++;
     }
-    return NULL;
+    // 如果没有找到满足条件的元素，返回下标值为-1
+    return -1;
 }
 
 // 遍历顺序表
@@ -276,13 +281,12 @@ void ClearList(LinkList SL)
     }
 
     SL->next = NULL;
-    LinkLength = 0;
 }
 
 // 改变第i个数据元素的值
 void PutElem(LinkList SL, int i, ElemType* e)
 {
-    if(i < 1 || i > LinkLength)
+    if(i < 1 || i > ListLength(SL))
     {
         printf("未找到第i个元素，无法操作！\n");
         return;
@@ -302,7 +306,7 @@ void PutElem(LinkList SL, int i, ElemType* e)
 // 插入数据元素
 void ListInsert(LinkList SL, int i, ElemType e)
 {
-    if(i < 1 || i > LinkLength + 1)
+    if(i < 1 || i > ListLength(SL) + 1)
     {
         printf("不存在此位置，无法操作！\n");
         return;
@@ -327,14 +331,12 @@ void ListInsert(LinkList SL, int i, ElemType e)
 
     node->next = head->next;
     head->next = node;        
-    LinkLength++;
-
 }
 
 // 删除数据元素
 ElemType ListDelete(LinkList SL, int i, ElemType* e)
 {
-    if(i < 1 || i > LinkLength)
+    if(i < 1 || i > ListLength(SL))
     {
         printf("不存在此位置，无法操作！\n");
         return NULL;
@@ -354,7 +356,6 @@ ElemType ListDelete(LinkList SL, int i, ElemType* e)
     head->next = node->next;
     *e = node->data;
     free(node);      
-    LinkLength--;
     return *e;
 }
 

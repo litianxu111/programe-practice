@@ -153,7 +153,8 @@ int LocateElem(SeqList SL, ElementType e, bool (*compare)(ElementType, ElementTy
         if(compare(SL.list[i], e))
             return i;
     }
-    return NULL;
+    // 如果没有找到满足条件的元素，返回下标值为-1
+    return -1;
 }
 
 // 遍历顺序表
